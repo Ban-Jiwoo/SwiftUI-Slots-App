@@ -14,6 +14,8 @@ struct ContentView: View {
     @State private var numbers = [1, 2, 0]
     @State private var credits = 1000
     private var betAmount = 10
+    @State private var backgrounds = [Color.white, Color.white, Color.white]
+    @State private var longPressed = false
     
     var body: some View {
         
@@ -37,7 +39,7 @@ struct ContentView: View {
                     Image(systemName: "star.fill")
                         .foregroundColor(.yellow)
                     
-                    Text("Slots")
+                    Text("J&D Slots")
                     .bold()
                         .foregroundColor(.white)
                     
@@ -62,19 +64,19 @@ struct ContentView: View {
                     Image(symbols[numbers[0]])
                     .resizable()
                         .aspectRatio(1, contentMode: .fit)
-                        .background(Color.white.opacity(0.5))
+                        .background(backgrounds[0].opacity(0.5))
                     .cornerRadius(20)
                     
                     Image(symbols[numbers[1]])
                     .resizable()
                         .aspectRatio(1, contentMode: .fit)
-                        .background(Color.white.opacity(0.5))
+                        .background(backgrounds[1].opacity(0.5))
                     .cornerRadius(20)
                     
                     Image(symbols[numbers[2]])
                     .resizable()
                         .aspectRatio(1, contentMode: .fit)
-                        .background(Color.white.opacity(0.5))
+                        .background(backgrounds[2].opacity(0.5))
                     .cornerRadius(20)
                     
                     Spacer()
@@ -82,32 +84,99 @@ struct ContentView: View {
                 
                 Spacer()
                 
-                Button(action: {
+                
+                VStack {
                     
-                    //Change the images
-                    self.numbers[0] = Int.random(in: 0...self.symbols.count - 1)
-                    self.numbers[1] = Int.random(in: 0...self.symbols.count - 1)
-                    self.numbers[2] = Int.random(in: 0...self.symbols.count - 1)
+                        Button(action: {
+                            
+                            //Set backgrounds back to white
+                            self.backgrounds[0] = Color.white
+                            self.backgrounds[1] = Color.white
+                            self.backgrounds[2] = Color.white
+                            
+                            //Change the images
+                            self.numbers[0] = Int.random(in: 0...self.symbols.count - 1)
+                            self.numbers[1] = Int.random(in: 0...self.symbols.count - 1)
+                            self.numbers[2] = Int.random(in: 0...self.symbols.count - 1)
+                            
+                            //Check winnings
+                            if self.numbers[0] == self.numbers[1] && self.numbers[1] == self.numbers[2] {
+                                //won
+                                self.credits += self.betAmount * 10
+                                
+                                //Update backgrounds to green
+                                self.backgrounds[0] = Color.green
+                                self.backgrounds[1] = Color.green
+                                self.backgrounds[2] = Color.green
+                                
+                            }
+                            else {
+                                self.credits -= self.betAmount
+                            }
+                            
+                            
+                            
+                        }) {
+                            Text("Spin")
+                            .bold()
+                                .foregroundColor(.white)
+                                .padding(.all, 10)
+                                .padding([.leading, .trailing], 30)          .background(Color.pink)
+                                .cornerRadius(20)
+
+                        }
+                        
+                        
                     
-                    //Check winnings
-                    if self.numbers[0] == self.numbers[1] && self.numbers[1] == self.numbers[2] {
-                        //won
-                        self.credits += self.betAmount * 10
-                    }
-                    else {
-                        self.credits -= self.betAmount
-                    }
-                }) {
-                    Text("Spin")
-                    .bold()
-                        .foregroundColor(.white)
-                        .padding(.all, 10)
-                        .padding([.leading, .trailing], 30)                        .background(Color.pink)
-                    .cornerRadius(20)
+                        Text("\(betAmount) credits").padding(.top, 10)
+                            .font(.footnote)
+                    
+                    
+                        Button(action: {
+                            
+                            //Set backgrounds back to white
+                            self.backgrounds[0] = Color.white
+                            self.backgrounds[1] = Color.white
+                            self.backgrounds[2] = Color.white
+                            
+                            //Change the images
+                            self.numbers[0] = self.numbers[1]
+                            self.numbers[1] = self.numbers[1]
+                            self.numbers[2] = self.numbers[1]
+                            
+                            //Check winnings
+                            if self.numbers[0] == self.numbers[1] && self.numbers[1] == self.numbers[2] {
+                                //won
+                                self.credits += self.betAmount * 10
+                                
+                                //Update backgrounds to green
+                                self.backgrounds[0] = Color.green
+                                self.backgrounds[1] = Color.green
+                                self.backgrounds[2] = Color.green
+                                
+                            }
+                            else {
+                                self.credits -= self.betAmount
+                            }
+                            
+                            
+                            
+                        }) {
+                            Text("Hidden")
+                                .foregroundColor(.clear)
+                                .padding(.top, 0.5)
+
+                        }
                 }
                 
+
+            
+                
                 Spacer()
+
             }
+            
+            
             
         }
     }
